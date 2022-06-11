@@ -1,0 +1,17 @@
+.product_page{
+  display: flex;
+  &>div{
+    display: flex;
+    flex-direction: column;
+    &>div{
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  }
+}
+
+.button_delete{
+  color: white;
+  background-color: #ff3a11;
+}

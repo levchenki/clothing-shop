@@ -1,0 +1,29 @@
+.search {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  margin-left: auto;
+  gap: 2rem;
+
+  & > input {
+    display: flex;
+    overflow: hidden;
+    border: var(--font_color) solid 0.1rem;
+    padding: 0.1rem 1rem;
+    border-radius: 1rem;
+    flex-grow: 1;
+    width: 1rem;
+  }
+
+  & > button {
+    width: 10%;
+    height: 100%;
+    background-color: var(--btn_color);
+    border-radius: 25px;
+    transition: ease 0.1s;
+  }
+
+  & > button:active {
+    background-color: var(--btn_click_color);
+  }
+}

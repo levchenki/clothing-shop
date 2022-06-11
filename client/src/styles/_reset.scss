@@ -1,0 +1,44 @@
+a, a:visited, a:hover,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+li {
+  list-style-type: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+p{
+  margin: 0;
+  padding: 0;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+  background: none;
+}
+button{
+  cursor: pointer;
+}
+
+input:hover,
+input:active{
+
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
