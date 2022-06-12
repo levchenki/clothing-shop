@@ -1,5 +1,5 @@
 require('dotenv').config()
-const {Client, Pool} = require('pg')
+const {Client} = require('pg')
 
 const client = new Client({
     port: process.env.DB_PORT,

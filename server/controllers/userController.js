@@ -13,17 +13,18 @@ const generateJwt = (id, email) => {
 class UserController {
   async registration(req, res, next) {
     const {name, lastname, patronymic, email, password, phone} = req.body;
-
     if (!email || !password) {
       return next(ApiError.badRequest('Некорректный email или пароль'))
     }
 
     const getUserQuery = `select *
                           from users
-                          where email = \'${email}\';`;
-
+                          where email = $1;`;
+    const emailValues = [email]
+    console.log(email)
     try {
-      const checkUsersEmail = (await client.query(getUserQuery)).rows[0];
+      const checkUsersEmail = (await client.query(getUserQuery, emailValues)).rows[0];
+      console.log(checkUsersEmail)
       console.log(checkUsersEmail);
       // Если email уже зарегистрирован, то возвращаем ошибку
       if (checkUsersEmail) {
@@ -33,14 +34,14 @@ class UserController {
       console.log('Пользователя ещё нет в базе данных')
       // Добавляем пользователя, если email свободен
       const hashPassword = await bcrypt.hash(password, 5);
-      const insertUser = `insert into users (name, lastname, patronymic, password, email, phone_number)
-                          values (\'${name}\', \'${lastname}\', \'${patronymic}\', \'${hashPassword}\', \'${email}\',
-                                  \'${phone}\');`;
-      await client.query(insertUser);
+      const insertUser = `insert into users (name, lastname, patronymic, email, password, phone_number)
+                          values ($1, $2, $3, $4, $5, $6);`;
+      const values = [name, lastname, patronymic, email, hashPassword, phone]
+      await client.query(insertUser, values);
       console.log('user was inserted');
 
       // Получаем jst токен пользователя;
-      const user = (await client.query(getUserQuery)).rows[0];
+      const user = (await client.query(getUserQuery, emailValues)).rows[0];
       console.log(user);
       const token = generateJwt(user.id_user, email);
 
@@ -52,10 +53,11 @@ class UserController {
 
   async login(req, res, next) {
     const {email, password} = req.body;
+    const values = [email]
     const getUserQuery = `select *
                           from users
-                          where email = \'${email}\';`;
-    const user = (await client.query(getUserQuery)).rows[0];
+                          where email = $1;`;
+    const user = (await client.query(getUserQuery, values)).rows[0];
     if (!user) {
       return next(ApiError.internal('Пользователь с таким именем не найден'));
     }
