@@ -30,14 +30,14 @@ class CategoryController {
   }
 
   async delete(req, res) {
-    const {id} = req.body;
+    const {id_category} = req.body;
     const deleteQuery = `delete
                          from categories
                          where id_category = $1;`;
-    const values = [id];
+    const values = [id_category];
     try {
       await client.query(deleteQuery, values);
-      return res.json({message: `Category with id = ${id} was deleted`})
+      return res.json({message: `Category with id = ${id_category} was deleted`})
     } catch (e) {
       console.log(e.message)
       return res.json({error: e.message});

@@ -27,14 +27,14 @@ class BrandController {
   }
 
   async delete(req, res) {
-    const {id} = req.body;
+    const {id_brand} = req.body;
     const deleteQuery = `delete
                          from brands
                          where id_brand = $1;`;
-    const values = [id]
+    const values = [id_brand]
     try {
       await client.query(deleteQuery, values)
-      return res.json({message: `brand with id = ${id} was deleted`});
+      return res.json({message: `brand with id = ${id_brand} was deleted`});
     } catch (e) {
       console.log(e.message);
     }

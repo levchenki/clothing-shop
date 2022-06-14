@@ -1,0 +1,31 @@
+.product_list {
+  margin: 2rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, auto));
+  grid-gap: 30px;
+}
+
+.product_item {
+  border: 2px solid #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+
+  & > img {
+    height: auto;
+  }
+
+  & > div {
+    & > p {
+      color: red;
+      &>span {
+        font-weight: bold;
+      }
+    }
+
+    & > div > p {
+      color: green;
+    }
+  }
+}

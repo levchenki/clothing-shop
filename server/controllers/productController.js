@@ -26,24 +26,26 @@ class ProductController {
   }
 
   async getAll(req, res) {
-    let {brand, category, limit, page, sort} = req.query;
+    let {brand, category, limit, page, sorting} = req.query;
     page = page || 1;
     limit = limit || 20;
     let offset = page * limit - limit;
 
-    switch (sort) {
+    //?sorting=category
+
+    switch (sorting) {
       case 'brand':
-        sort = 'brand_name';
+        sorting = 'brand_name';
         break;
       case 'category':
-        sort = 'category_name';
+        sorting = 'category_name';
         break;
       default:
-        sort = 'name';
+        sorting = 'name';
         break;
     }
 
-    console.log(sort)
+    console.log(sorting)
 
     if (!brand && !category) {
       const selectCount = `select count(*)
@@ -62,13 +64,14 @@ class ProductController {
                                from products p
                                         join categories c on c.id_category = p.id_category
                                         join brands b on b.id_brand = p.id_brand
-                               order by ${sort}
+                               order by ${sorting}
                                limit $1 offset $2;`;
       const values = [limit, offset]
       try {
-        const count = (await client.query(selectCount)).rows[0];
+        const count = +(await client.query(selectCount)).rows[0].count;
+        console.log(count)
         const query = (await client.query(selectQueryPage, values)).rows;
-        return res.json({...count, query});
+        return res.json({count, query});
       } catch (e) {
         console.log(e.message);
         return res.json({error: e.message})
@@ -90,7 +93,7 @@ class ProductController {
                                     join categories c on c.id_category = p.id_category
                                     join brands b on b.id_brand = p.id_brand
                            where b.id_brand = $1
-                           order by name
+                           order by ${sorting}
                            limit $2 offset $3;`;
       const values = [brand, limit, offset]
       try {
@@ -116,7 +119,7 @@ class ProductController {
                                     join categories c on c.id_category = p.id_category
                                     join brands b on b.id_brand = p.id_brand
                            where c.id_category = $1
-                           order by name
+                           order by ${sorting}
                            limit $2 offset $3;`;
       const values = [category, limit, offset]
       try {
@@ -143,7 +146,7 @@ class ProductController {
                                     join brands b on b.id_brand = p.id_brand
                            where c.id_category = $1
                              and b.id_brand = $2
-                           order by name
+                           order by ${sorting}
                            limit $3 offset $4;`;
       const values = [category, brand, limit, offset]
       try {
@@ -158,7 +161,7 @@ class ProductController {
 
   async getOne(req, res) {
     const {id} = req.params
-    const selectSizesQuery = `select *
+    const selectSizesQuery = `select id_warehouse, count, size
                               from products_to_warehouses
                               where id_product = $1`;
     const selectQuery = `select id_product,
@@ -188,21 +191,20 @@ class ProductController {
   }
 
   async delete(req, res) {
-    const {id} = req.params;
+    const {id_product} = req.body;
     const deleteQuery = `delete
                          from products
                          where id_product = $1;`;
-    const values = [id];
+    const values = [id_product];
     try {
       await client.query(deleteQuery, values);
-      return res.json({message: `Product with id = ${id} was deleted`});
+      return res.json({message: `Product with id = ${id_product} was deleted`});
     } catch (e) {
       console.log(e);
     }
   }
 
   async update(req, res) {
-    const {id} = req.params;
     const product = req.body;
     const {picture_url} = req.files ? req.files : ''
 
@@ -220,10 +222,10 @@ class ProductController {
                              id_brand    = $5,
                              id_category = $6
                          where id_product = $1;`
-    const values = [id, product.name, product.price, fileName, product.id_brand, product.id_category]
+    const values = [product.id_product, product.name, product.price, fileName, product.id_brand, product.id_category]
     try {
       client.query(updateQuery, values);
-      return res.json({message: `product with id = ${id} was updated`});
+      return res.json({message: `product with id = ${product.id_product} was updated`});
     } catch (e) {
       console.log(e);
       return res.json({error: e.message});

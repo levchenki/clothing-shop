@@ -1,0 +1,19 @@
+.modal_bg {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.2);
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_window {
+  background-color: #fff;
+  width: 50%;
+  padding: 2rem 3rem;
+  border-radius: 25px;
+}
