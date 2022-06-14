@@ -12,8 +12,32 @@
 }
 
 .modal_window {
+  text-align: left;
   background-color: #fff;
   width: 50%;
   padding: 2rem 3rem;
   border-radius: 25px;
+
+  & > ul > li {
+    line-height: 1.5rem
+  }
+}
+
+.edit_data {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit_item {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.remove_item {
+  color: red;
+  cursor: pointer
+}
+
+.add_item {
+
 }

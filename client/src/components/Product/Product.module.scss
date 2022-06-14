@@ -18,14 +18,15 @@
 
   & > div {
     & > p {
-      color: red;
-      &>span {
+      font-size: 1.4rem;
+
+      & > span {
         font-weight: bold;
       }
     }
 
     & > div > p {
-      color: green;
+      font-size: 1.2rem;
     }
   }
 }

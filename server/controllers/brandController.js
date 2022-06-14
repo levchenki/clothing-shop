@@ -26,6 +26,21 @@ class BrandController {
     }
   }
 
+  async getOne(req, res) {
+    const {id} = req.params
+    const selectQuery = `select *
+                         from brands
+                         where id_brand = $1;`;
+    const values = [id]
+    try {
+      const brand = (await client.query(selectQuery, values)).rows[0];
+      return res.json(brand);
+    } catch (e) {
+      console.log(e)
+      return res.json({error: e.message})
+    }
+  }
+
   async delete(req, res) {
     const {id_brand} = req.body;
     const deleteQuery = `delete
@@ -47,10 +62,10 @@ class BrandController {
                              country          = $3,
                              year_of_creation = $4
                          where id_brand = $1;`;
-    const values = [brand.id, brand.name, brand.country, brand.year_of_creation]
+    const values = [brand.id_brand, brand.name, brand.country, brand.year_of_creation]
     try {
       await client.query(updateQuery, values);
-      return res.json({message: `category with id = ${brand.id} was updated`})
+      return res.json({message: `category with id = ${brand.id_brand} was updated`})
     } catch (e) {
       console.log(e)
       return res.json({error: e.message});

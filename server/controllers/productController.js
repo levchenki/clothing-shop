@@ -45,8 +45,6 @@ class ProductController {
         break;
     }
 
-    console.log(sorting)
-
     if (!brand && !category) {
       const selectCount = `select count(*)
                            from products;`;
@@ -69,7 +67,6 @@ class ProductController {
       const values = [limit, offset]
       try {
         const count = +(await client.query(selectCount)).rows[0].count;
-        console.log(count)
         const query = (await client.query(selectQueryPage, values)).rows;
         return res.json({count, query});
       } catch (e) {
@@ -161,9 +158,10 @@ class ProductController {
 
   async getOne(req, res) {
     const {id} = req.params
-    const selectSizesQuery = `select id_warehouse, count, size
+    const selectSizesQuery = `select sum(count) as count, size
                               from products_to_warehouses
-                              where id_product = $1`;
+                              where id_product = $1
+                              group by size;`;
     const selectQuery = `select id_product,
                                 p.name  as name,
                                 price,
@@ -177,7 +175,7 @@ class ProductController {
                          from products p
                                   join brands b on b.id_brand = p.id_brand
                                   join categories c on c.id_category = p.id_category
-                         where id_product = $1;`
+                         where id_product = $1;`;
     const values = [id]
     try {
       const sizes = (await client.query(selectSizesQuery, values)).rows
@@ -192,6 +190,7 @@ class ProductController {
 
   async delete(req, res) {
     const {id_product} = req.body;
+    console.log(id_product)
     const deleteQuery = `delete
                          from products
                          where id_product = $1;`;

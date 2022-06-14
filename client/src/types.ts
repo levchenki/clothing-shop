@@ -31,11 +31,11 @@ type TSize = {
   count: number;
   size: string;
 }
-type TGetOneProduct = {
+export type TGetOneProduct = {
   id_product: number;
   name: string;
   price: number;
-  picture_url?: any;
+  picture_url?: string;
   brand_name: string;
   brand_country: string;
   year_of_creation: Date;
@@ -53,7 +53,7 @@ export type TBrand = {
   id_brand: number;
   name: string;
   country: string;
-  year_of_creation: Date;
+  year_of_creation: Date | string;
 }
 
 // Тип для категории
@@ -62,7 +62,7 @@ export type TCategory = {
   name: string;
 }
 
-export type TGetAllEmployees = {
+export type TEmployee = {
   id_user: number;
   name: string;
   position: string;
@@ -70,7 +70,6 @@ export type TGetAllEmployees = {
 }
 
 export type TSorting = 'name' | 'brand' | 'category'
-
 
 export type TProductItem = {
   id_product: number;

@@ -17,12 +17,27 @@ class CategoryController {
   }
 
   async getAll(req, res) {
-    let selectQuery = `select *
-                       from categories
-                       order by name;`;
+    const selectQuery = `select *
+                         from categories
+                         order by name;`;
     try {
       const categories = (await client.query(selectQuery)).rows;
       return res.json(categories);
+    } catch (e) {
+      console.log(e)
+      return res.json({error: e.message})
+    }
+  }
+
+  async getOne(req, res) {
+    const {id} = req.params
+    const selectQuery = `select *
+                         from categories
+                         where id_category = $1;`;
+    const values = [id]
+    try {
+      const category = (await client.query(selectQuery, values)).rows[0];
+      return res.json(category);
     } catch (e) {
       console.log(e)
       return res.json({error: e.message})
@@ -49,10 +64,10 @@ class CategoryController {
     const updateQuery = `update categories
                          set name = $2
                          where id_category = $1;`;
-    const values = [category.id, category.name]
+    const values = [category.id_category, category.name]
     try {
       await client.query(updateQuery, values);
-      return res.json({message: `category with id = ${category.id} was updated`});
+      return res.json({message: `category with id = ${category.id_category} was updated`});
     } catch (e) {
       console.log(e)
       return res.json({error: e.message});

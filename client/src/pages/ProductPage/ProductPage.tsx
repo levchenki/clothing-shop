@@ -42,13 +42,6 @@ const ProductPage = () => {
                   : 'Товара нет в наличии'
                 }
               </div>
-              <div>
-                {
-                //  TODO: Сделать изменение и удаление товаров
-                }
-                <button>Изменить</button>
-                <button>Удалить</button>
-              </div>
             </div>
           </>
       }
